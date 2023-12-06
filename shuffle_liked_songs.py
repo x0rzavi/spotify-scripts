@@ -5,12 +5,15 @@ Shuffle Spotify Liked Songs into a Playlist
 import random
 import os
 import spotipy
+from dotenv import load_dotenv
 from spotipy.oauth2 import SpotifyOAuth
 
+load_dotenv()
+
 scope = "playlist-read-private playlist-modify-private user-library-read"
-client_id = os.environ.get("SPOTIPY_CLIENT_ID")
-client_secret = os.environ.get("SPOTIPY_CLIENT_SECRET")
-redirect_uri = os.environ.get("SPOTIPY_REDIRECT_URI")
+client_id = os.getenv("SPOTIPY_CLIENT_ID")
+client_secret = os.getenv("SPOTIPY_CLIENT_SECRET")
+redirect_uri = os.getenv("SPOTIPY_REDIRECT_URI")
 auth_manager = SpotifyOAuth(
     client_id=client_id,
     client_secret=client_secret,
@@ -39,7 +42,7 @@ user_id = sp.me()["id"]
 playlist_id = new_playlist()
 
 
-def get_tracks(songs_list):
+def get_tracks_uri(songs_list):
     tracks_list = []
     while True:
         for item in songs_list["items"]:
@@ -53,7 +56,8 @@ def get_tracks(songs_list):
     return tracks_list
 
 
-liked_songs_uris = get_tracks(sp.current_user_saved_tracks())
+liked_songs_uris = get_tracks_uri(sp.current_user_saved_tracks())
+print(f"Shuffling {len(liked_songs_uris)} songs into new playlist!")
 random.shuffle(liked_songs_uris)
 for i in range(0, len(liked_songs_uris), 100):
     sp.user_playlist_add_tracks(user_id, playlist_id, liked_songs_uris[i : i + 100])
