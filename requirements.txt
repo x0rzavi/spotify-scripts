@@ -1,2 +1,6 @@
 spotipy
 python-dotenv
+requests
+deezer-python
+rapidfuzz
+pandas
