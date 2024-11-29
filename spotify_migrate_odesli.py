@@ -106,6 +106,7 @@ def process_songs():
                     "isProcessed": True,
                 }
             )
+            print(f"Processed song {track_name}")
 
         # Periodically save progress to a CSV
         if idx % 10 == 0:  # Every 10 rows
