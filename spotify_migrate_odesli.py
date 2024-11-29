@@ -1,3 +1,9 @@
+"""
+Export spotify playlists: https://github.com/watsonbox/exportify
+Fetch song informations: https://odesli.co
+Easily migrate away from Spotify to Tidal, Deezer, Youtube
+"""
+
 import os
 import time
 
@@ -5,20 +11,20 @@ import pandas as pd
 import requests
 
 # File paths
-liked_songs_file = "liked_songs.csv"
-output_file = "liked_songs_with_links.csv"
-progress_file = "progress_file.csv"
+LIKED_SONGS_FILE = "liked_songs.csv"
+OUTPUT_FILE = "liked_songs_links.csv"
+PROGRESS_FILE = "liked_songs_progress.csv"
 
 # Load the liked_songs CSV
-liked_songs = pd.read_csv(liked_songs_file)
+liked_songs = pd.read_csv(LIKED_SONGS_FILE)
 
 # Ensure columns have no extra spaces
 liked_songs.columns = liked_songs.columns.str.strip()
 
 # Load the progress CSV if it exists, to resume where we left off
-if os.path.exists(progress_file):
+if os.path.exists(PROGRESS_FILE):
     print("Loading progress from previous run...")
-    progress_df = pd.read_csv(progress_file)
+    progress_df = pd.read_csv(PROGRESS_FILE)
 else:
     # Create the initial progress DataFrame with additional columns
     progress_df = liked_songs[
@@ -104,18 +110,18 @@ def process_songs():
         # Periodically save progress to a CSV
         if idx % 10 == 0:  # Every 10 rows
             print(f"Saving progress at row {idx}...")
-            progress_df.to_csv(progress_file, index=False)
+            progress_df.to_csv(PROGRESS_FILE, index=False)
             time.sleep(6)  # Sleep to respect the rate limit of 10 songs per minute
 
     # Convert the list of new rows to a DataFrame and save to output CSV
     output_df = pd.DataFrame(new_rows)
-    output_df.to_csv(output_file, index=False)
-    print(f"New CSV file created: {output_file}")
+    output_df.to_csv(OUTPUT_FILE, index=False)
+    print(f"New CSV file created: {OUTPUT_FILE}")
 
 
 # Start the song processing
 process_songs()
 
 # Final save of progress after completion
-progress_df.to_csv(progress_file, index=False)
+progress_df.to_csv(PROGRESS_FILE, index=False)
 print("Final progress saved.")
