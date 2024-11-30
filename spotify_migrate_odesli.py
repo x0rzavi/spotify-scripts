@@ -112,12 +112,11 @@ def process_songs():
         if idx % 10 == 0:  # Every 10 rows
             print(f"Saving progress at row {idx}...")
             progress_df.to_csv(PROGRESS_FILE, index=False)
-            time.sleep(6)  # Sleep to respect the rate limit of 10 songs per minute
+            time.sleep(2)  # Sleep to respect the rate limit of 10 songs per minute
 
-    # Convert the list of new rows to a DataFrame and save to output CSV
-    output_df = pd.DataFrame(new_rows)
-    output_df.to_csv(OUTPUT_FILE, index=False)
-    print(f"New CSV file created: {OUTPUT_FILE}")
+    # Save the entire progress DataFrame to the output CSV
+    progress_df.to_csv(OUTPUT_FILE, index=False)
+    print(f"Final CSV file created: {OUTPUT_FILE}")
 
 
 # Start the song processing
